@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<http:listener-connection host="localhost" port="8085" />
 	</http:listener-config>
 	<amazon-lambda:config name="Amazon_Lambda_Connector_Config" doc:name="Amazon Lambda Connector Config" doc:id="1ffd07fd-970b-429f-b894-0e4ac53d0538" >
-		<amazon-lambda:connection accessKey="AKIASE6RJBTACGZLSGU6" secretKey="wWp7HXhEGCg/zUHdk50G4K5Mts4vJqfxVyDdy+xs"/>
+		<amazon-lambda:connection accessKey="YOUR-ACCESS-KEY" secretKey="YOUR-SECRET-KEY"/>
 	</amazon-lambda:config>
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="c5e7757a-373e-4070-8030-1b0668a03936" />
 	<flow name="awslambdaintegration-InvokeFunction" doc:id="c3fcbf6d-590e-4bd0-953d-ecd317f72029" >
