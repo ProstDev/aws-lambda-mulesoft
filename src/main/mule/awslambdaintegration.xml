@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:amazon-lambda="http://www.mulesoft.org/schema/mule/amazon-lambda"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/amazon-lambda http://www.mulesoft.org/schema/mule/amazon-lambda/current/mule-amazon-lambda.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="863f4158-9d40-48b4-a706-0596c7fd6d59" >
+		<http:listener-connection host="localhost" port="8085" />
+	</http:listener-config>
+	<amazon-lambda:config name="Amazon_Lambda_Connector_Config" doc:name="Amazon Lambda Connector Config" doc:id="1ffd07fd-970b-429f-b894-0e4ac53d0538" >
+		<amazon-lambda:connection accessKey="AKIASE6RJBTACGZLSGU6" secretKey="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"/>
+	</amazon-lambda:config>
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="c5e7757a-373e-4070-8030-1b0668a03936" />
+	<flow name="awslambdaintegration-InvokeFunction" doc:id="c3fcbf6d-590e-4bd0-953d-ecd317f72029" >
+		<http:listener doc:name="Listener" doc:id="385a5738-18f3-435a-b350-43c6a2000afa" config-ref="HTTP_Listener_config" path="/lambdaInvoke"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="d9b9eef5-03f3-4abb-ab81-26558587ad35" variableName="inputValue"/>
+		<amazon-lambda:create20150331-functions-invocations-by-function-name doc:name="Invoke" doc:id="464ac9f6-6694-4236-855b-8e28b05f0de4" config-ref="Amazon_Lambda_Connector_Config" functionName="test-hello-world-mule-poc" xAmzInvocationType="REQUEST_RESPONSE">
+			<amazon-lambda:j_20150331-functions-invocations-content ><![CDATA[#[vars.inputValue]]]></amazon-lambda:j_20150331-functions-invocations-content>
+		</amazon-lambda:create20150331-functions-invocations-by-function-name>
+		<json-logger:logger doc:name="Logger" doc:id="774a0ce8-c76c-4032-aa13-491db74ef829" config-ref="JSON_Logger_Config" message="Successfully Invoked the AWS Function"/>
+	</flow>
+	<flow name="awslambdaintegrationFlow-GetFunction" doc:id="e6295789-4d1c-4aa0-ac0d-9b999dfdb863" >
+		<http:listener doc:name="Listener" doc:id="1570aa7c-422e-4fd7-9c2f-6732dfbb1876" config-ref="HTTP_Listener_config" path="/lambdaGet"/>
+		<amazon-lambda:get20150331-functions-by-function-name doc:name="Get Function" doc:id="2f4318fa-5ab4-4f6e-a03e-b0caf12e44dc" config-ref="Amazon_Lambda_Connector_Config" functionName="test-hello-world-mule-poc" />
+	</flow>
+	<flow name="awslambdaintegration-ListFunctions" doc:id="059b7869-2c88-4eab-92ad-68351fc736e8" >
+		<http:listener doc:name="Listener" doc:id="6bde0074-9cd4-49e8-9596-e4dfd93c9f7e" config-ref="HTTP_Listener_config" path="/lambdaList"/>
+		<amazon-lambda:get20150331-functions doc:name="List Functions" doc:id="1c20694e-69f8-412a-90d8-5f2b7f230e48" config-ref="Amazon_Lambda_Connector_Config" />
+	</flow>
+</mule>
